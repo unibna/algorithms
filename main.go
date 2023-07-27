@@ -216,8 +216,12 @@ func subtract(num1 LargeNumber, num2 LargeNumber) (result LargeNumber) {
 func main() {
 	// Init numbers
 	var number1, number2 LargeNumber
+
+	// Set custom values
 	number1.fromString("0")
 	number2.fromString("0")
+
+	// Random values
 	// number1.random(1_000)
 	// number2.random(1_000)
 
