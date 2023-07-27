@@ -11,8 +11,8 @@ import (
 const CHUNKSIZE = 1_000_000_000
 
 type LargeNumber struct {
-	foo  []string
-	sign int // 1 is possitive, 0 is negative
+	value []string
+	sign  int // 1 is possitive, 0 is negative
 }
 
 func (ln *LargeNumber) fromString(input string) {
@@ -25,7 +25,7 @@ func (ln *LargeNumber) fromString(input string) {
 	for i := 0; i < len(input); i++ {
 		// digit, _ := strconv.Atoi(string(input[i]))
 		// ln.value = append(ln.value, digit)
-		ln.foo = append(ln.foo, string(input[i]))
+		ln.value = append(ln.value, string(input[i]))
 	}
 }
 
@@ -34,7 +34,7 @@ func (ln *LargeNumber) toString() string {
 
 	if !ln.isZero() {
 		var removeZero bool = true
-		for _, val := range ln.foo {
+		for _, val := range ln.value {
 
 			if removeZero {
 				if val != "0" {
@@ -61,14 +61,14 @@ func (ln *LargeNumber) append(input int) {
 	if input == 0 {
 		for i := 0; i < 9; i++ {
 			// ln.value = append([]int{0}, ln.value...)
-			ln.foo = append([]string{"0"}, ln.foo...)
+			ln.value = append([]string{"0"}, ln.value...)
 		}
 	} else {
 		for input > 0 {
 			carry := input % 10
 			input = input / 10
 			// ln.value = append([]int{carry}, ln.value...)
-			ln.foo = append([]string{fmt.Sprintf("%d", carry)}, ln.foo...)
+			ln.value = append([]string{fmt.Sprintf("%d", carry)}, ln.value...)
 		}
 	}
 }
@@ -94,13 +94,13 @@ func (ln *LargeNumber) random(size int) {
 
 func (ln LargeNumber) isZero() bool {
 	var count int
-	for _, x := range ln.foo {
+	for _, x := range ln.value {
 		if x == "0" {
 			count++
 		}
 	}
 
-	if count == len(ln.foo) {
+	if count == len(ln.value) {
 		return true
 	}
 	return false
@@ -112,16 +112,16 @@ func (ln LargeNumber) print() {
 
 func (ln LargeNumber) gtAbs(num LargeNumber) bool {
 	// true meaning ln is greater, else is num or even
-	if len(ln.foo) > len(num.foo) {
+	if len(ln.value) > len(num.value) {
 		return true
-	} else if len(ln.foo) < len(num.foo) {
+	} else if len(ln.value) < len(num.value) {
 		return false
 	}
 
-	for i := 0; i < len(ln.foo); i++ {
-		if ln.foo[i] > num.foo[i] {
+	for i := 0; i < len(ln.value); i++ {
+		if ln.value[i] > num.value[i] {
 			return true
-		} else if ln.foo[i] > num.foo[i] {
+		} else if ln.value[i] > num.value[i] {
 			return false
 		}
 	}
@@ -143,8 +143,8 @@ func (num1 LargeNumber) add(num2 LargeNumber) (result LargeNumber) {
 func handleAdd(num1 LargeNumber, num2 LargeNumber) (result LargeNumber) {
 	var leftNum1, leftNum2, carry int
 	result.sign = num1.sign
-	rightNum1 := len(num1.foo)
-	rightNum2 := len(num2.foo)
+	rightNum1 := len(num1.value)
+	rightNum2 := len(num2.value)
 
 	for rightNum1 > 0 || rightNum2 > 0 {
 		if rightNum1-9 > 0 {
@@ -159,8 +159,8 @@ func handleAdd(num1 LargeNumber, num2 LargeNumber) (result LargeNumber) {
 			leftNum2 = 0
 		}
 
-		val1, _ := strconv.Atoi(strings.Join(num1.foo[leftNum1:rightNum1], ""))
-		val2, _ := strconv.Atoi(strings.Join(num2.foo[leftNum2:rightNum2], ""))
+		val1, _ := strconv.Atoi(strings.Join(num1.value[leftNum1:rightNum1], ""))
+		val2, _ := strconv.Atoi(strings.Join(num2.value[leftNum2:rightNum2], ""))
 
 		sum := val1 + val2 + carry
 		val := sum % CHUNKSIZE
@@ -177,8 +177,8 @@ func handleAdd(num1 LargeNumber, num2 LargeNumber) (result LargeNumber) {
 func subtract(num1 LargeNumber, num2 LargeNumber) (result LargeNumber) {
 	var leftNum1, leftNum2, borrow int
 	result.sign = num1.sign
-	rightNum1 := len(num1.foo)
-	rightNum2 := len(num2.foo)
+	rightNum1 := len(num1.value)
+	rightNum2 := len(num2.value)
 
 	for rightNum1 > 0 || rightNum2 > 0 {
 		if rightNum1-9 > 0 {
@@ -193,8 +193,8 @@ func subtract(num1 LargeNumber, num2 LargeNumber) (result LargeNumber) {
 			leftNum2 = 0
 		}
 
-		val1, _ := strconv.Atoi(strings.Join(num1.foo[leftNum1:rightNum1], ""))
-		val2, _ := strconv.Atoi(strings.Join(num2.foo[leftNum2:rightNum2], ""))
+		val1, _ := strconv.Atoi(strings.Join(num1.value[leftNum1:rightNum1], ""))
+		val2, _ := strconv.Atoi(strings.Join(num2.value[leftNum2:rightNum2], ""))
 
 		diff := val1 - val2 - borrow
 		if diff < 0 {
